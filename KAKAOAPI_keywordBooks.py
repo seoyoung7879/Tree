@@ -1,7 +1,7 @@
 import requests
+from config import KAKAO_API_KEY  # config.py에서 API 키를 가져옵니다.
 
 # 카카오 API 설정
-REST_API_KEY = ''  # 여기에 발급받은 REST API 키를 입력하세요.
 base_url = 'https://dapi.kakao.com/v3/search/book'
 
 # 검색할 키워드 설정
@@ -9,7 +9,7 @@ keyword = '용서'
 
 # 요청 헤더 설정
 headers = {
-    'Authorization': f'KakaoAK {REST_API_KEY}'
+    'Authorization': f'KakaoAK {KAKAO_API_KEY}'  # API 키를 사용합니다.
 }
 
 # 요청 파라미터 설정

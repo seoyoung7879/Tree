@@ -2,13 +2,15 @@ import pandas as pd
 import requests
 import xml.etree.ElementTree as ET
 import os
+from config import KAKAO_API_KEY 
+from config import LBAPI_AUTH_KEY
 
 # 카카오 API 설정
-REST_API_KEY = ''  # 여기에 발급받은 REST API 키를 입력하세요.
+REST_API_KEY = KAKAO_API_KEY   # 여기에 발급받은 REST API 키를 입력하세요.
 base_url = 'https://dapi.kakao.com/v3/search/book'
 
 # API 인증키 및 URL 설정 (LBAPI)
-auth_key = ''
+auth_key = LBAPI_AUTH_KEY
 base_url_lbapi = 'http://data4library.kr/api/usageAnalysisList'
 
 # 데이터 폴더 경로 설정

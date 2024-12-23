@@ -1,8 +1,10 @@
 import requests
 import xml.etree.ElementTree as ET
+from config import LBAPI_AUTH_KEY
 
 # API 인증키 및 URL 설정
-auth_key = ''
+auth_key = LBAPI_AUTH_KEY
+
 isbn = '9788972978589'  # 입력한 ISBN
 base_url = 'http://data4library.kr/api/usageAnalysisList'
 
