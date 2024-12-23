@@ -4,11 +4,11 @@ import xml.etree.ElementTree as ET
 import os
 
 # 카카오 API 설정
-REST_API_KEY = '2285d27fe6c44031cfa9347c62883c1f'  # 여기에 발급받은 REST API 키를 입력하세요.
+REST_API_KEY = ''  # 여기에 발급받은 REST API 키를 입력하세요.
 base_url = 'https://dapi.kakao.com/v3/search/book'
 
 # API 인증키 및 URL 설정 (LBAPI)
-auth_key = '476eefbbd0bcbaa9490e343ed7604a4092f0891abf026d30984908ca469e79c1'
+auth_key = ''
 base_url_lbapi = 'http://data4library.kr/api/usageAnalysisList'
 
 # 데이터 폴더 경로 설정
