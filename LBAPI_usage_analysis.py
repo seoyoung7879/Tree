@@ -2,7 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 
 # API 인증키 및 URL 설정
-auth_key = '476eefbbd0bcbaa9490e343ed7604a4092f0891abf026d30984908ca469e79c1'
+auth_key = ''
 isbn = '9788972978589'  # 입력한 ISBN
 base_url = 'http://data4library.kr/api/usageAnalysisList'
 

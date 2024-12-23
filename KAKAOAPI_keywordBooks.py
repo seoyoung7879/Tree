@@ -1,7 +1,7 @@
 import requests
 
 # 카카오 API 설정
-REST_API_KEY = '2285d27fe6c44031cfa9347c62883c1f'  # 여기에 발급받은 REST API 키를 입력하세요.
+REST_API_KEY = ''  # 여기에 발급받은 REST API 키를 입력하세요.
 base_url = 'https://dapi.kakao.com/v3/search/book'
 
 # 검색할 키워드 설정
