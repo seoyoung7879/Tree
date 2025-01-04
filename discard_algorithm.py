@@ -30,9 +30,10 @@ score_df['최근대출일시_점수'] = (datetime.now() - pd.to_datetime(score_d
 # 최근 대출일시 점수 정규화
 score_df['최근대출일시_점수'] = (score_df['최근대출일시_점수'] - score_df['최근대출일시_점수'].min()) / (score_df['최근대출일시_점수'].max() - score_df['최근대출일시_점수'].min()) * 10
 
-# 최근 대출일시가 없을 경우 10년 이상 된 책에 대해 만점 부여
+# 최근 대출일시가 없을 경우 10년 이상 된 책에 대해 만점 부여 아니면 5점
 score_df['최근대출일시_점수'] = score_df.apply(
-    lambda row: 10 if pd.isnull(row['최근대출일시']) and (current_year - row['출판년도'] >= 10) else row['최근대출일시_점수'], axis=1)
+    lambda row: 10 if pd.isnull(row['최근대출일시']) and (current_year - row['출판년도'] >= 10) 
+    else (5 if pd.isnull(row['최근대출일시']) else row['최근대출일시_점수']), axis=1)
 
 # 중복 도서 찾기
 duplicate_books = score_df[score_df.duplicated(subset=['서명', '저자'], keep=False)]
@@ -62,9 +63,12 @@ score_df['discard_score'] = (score_df['중복도서_점수'] * 1.00 +
                               score_df['최근대출일시_점수'] *1.00 + 
                               score_df['대출_점수'] * 1.00)
 
-# 상위 5개 결과 출력
-print("폐기 도서 알고리즘 결과 (상위 5개):")
-print(score_df[['도서ID', '서명',  '대출량', '최근대출일시', 'discard_score']]
-      .sort_values(by='discard_score', ascending=False)
-      .head(30)
-      .to_string(index=False))
+# 결과를 점수 높은 순으로 정렬
+sorted_score_df = score_df.sort_values(by='discard_score', ascending=False)
+
+# 결과를 CSV 파일로 저장
+output_file_path = os.path.join(folder_path, 'discard_result.csv')
+sorted_score_df.to_csv(output_file_path, index=False, encoding='cp949')
+
+# 결과 출력
+print(f"결과가 {output_file_path}에 저장되었습니다.")
