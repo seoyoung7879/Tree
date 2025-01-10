@@ -5,7 +5,7 @@ from config import LBAPI_AUTH_KEY
 from datetime import datetime
 import os
 # 데이터 읽기
-folder_path = r'C:\Users\hg226\Downloads\안내 및 데이터 송부\Tree\data'
+folder_path = r'data'
 discard_results_df = pd.read_csv(os.path.join(folder_path, 'discard_result.csv'), encoding='cp949')
 
 # 현재 연도
@@ -13,6 +13,9 @@ current_year = datetime.now().year
 
 # 마지막 5개 ISBN 선택
 last_five_isbns = discard_results_df['ISBN'].tail(5).tolist()
+
+# '서명' 열에서 책 제목을 읽고 중복 제거
+discard_titles_set = set(discard_results_df['서명'].dropna().unique())
 
 # API 호출 및 추천 도서 출력
 for isbn in last_five_isbns:
@@ -64,7 +67,9 @@ for isbn in last_five_isbns:
             # 추천 도서 출력
             print("추천된 신간 도서:")
             for rec in sorted_recommendations:
-                print(f"도서명: {rec['도서명']}, 저자: {rec['저자']}, 출판사: {rec['출판사']}, 출판 연도: {rec['출판 연도']}, ISBN: {rec['ISBN']}, 대출 횟수: {rec['대출 횟수']}")
+                # 추천 도서가 discard_result.csv의 '서명'에 있는지 확인
+                is_held = "True" if rec['도서명'] in discard_titles_set else "False"
+                print(f"도서명: {rec['도서명']}, 저자: {rec['저자']}, 출판사: {rec['출판사']}, 출판 연도: {rec['출판 연도']}, ISBN: {rec['ISBN']}, 대출 횟수: {rec['대출 횟수']}, 숭실대 보유: {is_held}")
         else:
             print(f"{isbn}에 대한 함께 빌려진 책 정보 없음")
     else:
