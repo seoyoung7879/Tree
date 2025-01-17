@@ -25,8 +25,6 @@ score_df['대출_점수'] = (score_df['대출_점수'] - score_df['대출_점수
 # 최근 대출일시 점수 계산 (최근 대출일시가 오래된 책일수록 점수가 높아짐)
 score_df['최근대출일시_점수'] = (datetime.now() - pd.to_datetime(score_df['최근대출일시'], errors='coerce')).dt.days
 
-
-
 # 최근 대출일시 점수 정규화
 score_df['최근대출일시_점수'] = (score_df['최근대출일시_점수'] - score_df['최근대출일시_점수'].min()) / (score_df['최근대출일시_점수'].max() - score_df['최근대출일시_점수'].min()) * 10
 
@@ -47,28 +45,38 @@ if not duplicate_books.empty:
     not_latest_books = duplicate_books[~duplicate_books.index.isin(latest_books.index)]
 
     # 중복 도서 점수 부여 (가장 최근 출판년도에 해당하지 않는 책에 5점 부여)
-    not_latest_books['중복도서_점수'] = 5
-    not_latest_books = not_latest_books[['도서ID', '중복도서_점수']].drop_duplicates()
-
-    # 점수 합산
-    score_df = score_df.merge(not_latest_books, on='도서ID', how='left')
-    score_df['중복도서_점수'] = score_df['중복도서_점수'].fillna(0)
+    score_df.loc[not_latest_books.index, '중복도서_점수'] = 5
 else:
     # 중복 도서가 아닐 경우 기본 점수 부여
     score_df['중복도서_점수'] = 0
 
 # 최종 점수 계산
-score_df['discard_score'] = (score_df['중복도서_점수'] * 1.00 + 
-                              score_df['오래된_점수'] * 1.00 + 
+score_df['discard_score'] = (score_df['중복도서_점수'] * 0.50 + 
+                              score_df['오래된_점수'] * 1.50 + 
                               score_df['최근대출일시_점수'] *1.00 + 
-                              score_df['대출_점수'] * 1.00)
+                              score_df['대출_점수'] * 2.00)
 
 # 결과를 점수 높은 순으로 정렬
 sorted_score_df = score_df.sort_values(by='discard_score', ascending=False)
 
+# 상위 20% 책들만 선택
+top_20_percent_df = sorted_score_df.head(int(len(sorted_score_df) * 0.2))
+
 # 결과를 CSV 파일로 저장
 output_file_path = os.path.join(folder_path, 'discard_result.csv')
-sorted_score_df.to_csv(output_file_path, index=False, encoding='cp949')
+top_20_percent_df.to_csv(output_file_path, index=False, encoding='cp949')
+
+# 결과 출력
+print(f"결과가 {output_file_path}에 저장되었습니다.")
+
+# 하위 10% 책들만 선택
+bottom_10_percent_df = sorted_score_df.tail(int(len(sorted_score_df) * 0.1))
+# ISBN별로 중복 제거
+distinct_bottom_10_percent_df = bottom_10_percent_df.drop_duplicates(subset=['ISBN'])
+
+# 결과를 CSV 파일로 저장
+output_file_path = os.path.join(folder_path, 'popular_result.csv')
+bottom_10_percent_df.to_csv(output_file_path, index=False, encoding='cp949')
 
 # 결과 출력
 print(f"결과가 {output_file_path}에 저장되었습니다.")
