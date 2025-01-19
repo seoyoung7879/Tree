@@ -33,6 +33,9 @@ score_df['최근대출일시_점수'] = score_df.apply(
     lambda row: 10 if pd.isnull(row['최근대출일시']) and (current_year - row['출판년도'] >= 10) 
     else (5 if pd.isnull(row['최근대출일시']) else row['최근대출일시_점수']), axis=1)
 
+# 중복 도서 점수 초기화
+score_df['중복도서_점수'] = 0
+
 # 중복 도서 찾기
 duplicate_books = score_df[score_df.duplicated(subset=['서명', '저자'], keep=False)]
 
@@ -46,14 +49,11 @@ if not duplicate_books.empty:
 
     # 중복 도서 점수 부여 (가장 최근 출판년도에 해당하지 않는 책에 5점 부여)
     score_df.loc[not_latest_books.index, '중복도서_점수'] = 5
-else:
-    # 중복 도서가 아닐 경우 기본 점수 부여
-    score_df['중복도서_점수'] = 0
 
 # 최종 점수 계산
 score_df['discard_score'] = (score_df['중복도서_점수'] * 0.50 + 
                               score_df['오래된_점수'] * 1.50 + 
-                              score_df['최근대출일시_점수'] *1.00 + 
+                              score_df['최근대출일시_점수'] * 1.00 + 
                               score_df['대출_점수'] * 2.00)
 
 # 결과를 점수 높은 순으로 정렬
