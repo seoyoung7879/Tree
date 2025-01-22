@@ -125,7 +125,7 @@ for isbn in last_five_isbns:
                         
                         # 중복 ISBN 제거 및 제목 필터링
                         if co_isbn not in seen_isbns and "흔한남매" not in co_bookname and "장편소설" not in co_bookname:
-                            # 장르 필터링
+                            # 장르 필터링 (추천 도서에만 적용)
                             if is_recommendable(co_isbn):
                                 recommendations.append({
                                     '도서명': co_bookname,
