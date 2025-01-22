@@ -60,7 +60,7 @@ def is_recommendable(isbn):
         
         # 추천 가능 여부 확인
         for genre in genres:
-            if genre in non_recommendable_genres:
+            if genre not in non_recommendable_genres:
                 return False  # 추천하지 않음
         return True  # 추천 가능
     return True  # 장르 정보가 없으므로 추천 가능
@@ -166,7 +166,7 @@ for isbn in last_five_isbns:
 
 # CSV 파일로 저장
 output_df = pd.DataFrame(all_recommendations)
-output_file_path = os.path.join(folder_path, 'recommendations_filteredCategory.csv')
+output_file_path = os.path.join(folder_path, 'filterTest.csv')
 output_df.to_csv(output_file_path, index=False, encoding='utf-8-sig')
 
 # 총 추천 도서 수 출력
