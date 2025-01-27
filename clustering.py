@@ -38,7 +38,7 @@ plt.ylabel('Inertia')
 plt.show()
 
 # k-means 클러스터링
-k = 4 # elbow로 결정
+k = 4 # elbow그래프로 결정
 kmeans = KMeans(n_clusters=k, random_state=42)
 cluster_data['Cluster'] = kmeans.fit_predict(scaled_data)
 
